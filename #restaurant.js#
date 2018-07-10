@@ -1,0 +1,101 @@
+// Dependencies
+// =============================================================
+var express = require("express");
+var bodyParser = require("body-parser");
+var path = require("path");
+
+// Sets up the Express App
+// =============================================================
+var app = express();
+var PORT = 4000;
+var waitList = [
+  {
+    customerName: "Ahmed",
+    customerEmail: "afhaque89@gmail.com",
+    customerID: "afhaque89",
+    phoneNumber: "979-587-0887"
+  }
+];
+var gotTable =  customerName: "Saima",
+    customerEmail: "saima@gmail.com",
+    phoneNumber: "979-587-0887",
+    customerID: "saimacool"
+  }
+];
+
+// Sets up the Express app to handle data parsing
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// Routes HTML
+// =============================================================
+
+app.get("/", function(req, res) {
+  res.sendFile(path.join(__dirname, "home.html"));
+});
+
+app.get("/tables", function(req, res) {
+  res.sendFile(path.join(__dirname, "tables.html"));
+});
+
+app.get("/reserve", function(req, res) {
+  res.sendFile(path.join(__dirname, "reserve.html"));
+});
+
+// Routes APIs
+// =============================================================
+
+app.get("/api/haveTable", function(req, res) {
+  var chosen = req.params.haveTable;
+
+  console.log(chosen);
+
+  for (var i = 0; i < gotTable.length; i++) {
+    return res.json(gotTable[i]);
+  }
+
+  return res.json(false);
+});
+
+app.get("/api/waitList", function(req, res) {
+    var chosen = req.params.waitList;
+  
+    console.log(chosen);
+  
+    for (var i = 0; i < waitList.length; i++) {
+      return res.json(waitList[i]);
+    }
+  
+    return res.json(false);
+  });
+
+
+app.post("/api/waitlist", function(req, res) {
+    var newTable = req.body;
+  
+    // newTable.customerName = newTable.name.replace(/\s+/g, "").toLowerCase();
+  
+    console.log(newTable);
+  
+    waitList.push(newTable);
+  
+    res.json(newTable);
+});
+
+app.post("/api/haveTable", function(req, res) {
+    var newTable = req.body;
+  
+    // newTable.customerName = newTable.name.replace(/\s+/g, "").toLowerCase();
+  
+    console.log(newTable);
+  
+    gotTable.push(newTable);
+  
+    res.json(newTable);
+  });
+
+// Starts the server to begin listening
+// =============================================================
+app.listen(PORT, function() {
+  console.log("App listening on PORT " + PORT);
+});
